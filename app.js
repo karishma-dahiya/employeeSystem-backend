@@ -62,31 +62,20 @@ app.get('/employees', function (req, res) {
         }
     });
 });
-app.get('/employees/:id', function (req, res) {
-    let id = +req.params.id;
-    let sql = 'SELECT * from employees WHERE id=?';
-    conn.query(sql,id, function (err, results) {
-        if (err) {
-            res.status(500).json({ error: 'Database Error', message: err.message });
-        } else {
-            res.json(results.rows);
-        }
-    });
 
-});
 
 app.post('/employees', function (req, res) {
     
-    let { empCode, name, department, designation, salary, gender } = req.body;
-    let checkQuery = 'SELECT empCode FROM employees WHERE empCode =$1';
-    conn.query(checkQuery, [empCode], function (err, results) {
+    let { empcode, name, department, designation, salary, gender } = req.body;
+    let checkQuery = 'SELECT empcode FROM employees WHERE empcode =$1';
+    conn.query(checkQuery, [empcode], function (err, results) {
         if (err) {
             res.status(500).json({ error: 'Database Error', message: err.message });
         } else if (results.rows.length > 0) {
-            res.status(400).json({ error: 'Employee already exists', message: 'An employee with this empCode already exists.' });
+            res.status(400).json({ error: 'Employee already exists', message: 'An employee with this Code already exists.' });
         } else {
-            let sql = 'INSERT INTO employees (empCode,name,department,designation,salary,gender) VALUES($1,$2,$3,$4,$5,$6) ';
-            let values = [empCode, name, department, designation, salary, gender];
+            let sql = 'INSERT INTO employees (empcode,name,department,designation,salary,gender) VALUES($1,$2,$3,$4,$5,$6) ';
+            let values = [empcode, name, department, designation, salary, gender];
             conn.query(sql, values, function (err1, results1) {
                 if (err1) {
                     res.status(500).json({ error: 'Database Error', message: err1.message });
@@ -98,10 +87,11 @@ app.post('/employees', function (req, res) {
     }); 
 });
 app.put('/employees/:id', function (req, res) {
-   let { empCode, name, department, designation, salary, gender } = req.body;
-     let values = [empCode, name, department, designation, salary, gender];
-    let id = req.params.id;
-    let sql = 'UPDATE employees SET empCode=$1, name=$2, department=$3, designation=$4, salary=$5, gender=$6  WHERE empCode=$1 ';
+   let { name, department, designation, salary, gender } = req.body;
+     let id = req.params.id;
+    let values = [name, department, designation, salary, gender, id];
+   
+    let sql = 'UPDATE employees SET name=$1, department=$2, designation=$3, salary=$4, gender=$5  WHERE empcode=$6 ';
     conn.query(sql,values, function (err, results) {
         if (err) {
             res.status(500).json({ error: 'Database Error', message: err.message });
@@ -112,7 +102,7 @@ app.put('/employees/:id', function (req, res) {
 });
 app.delete('/employees/:id', function (req, res) {
     let {id} = req.params;
-    let sql = 'DELETE FROM employees WHERE empCode=$1 ';
+    let sql = 'DELETE FROM employees WHERE empcode=$1 ';
     conn.query(sql,[id], function (err, results) {
         if (err) {
             res.status(500).json({ error: 'Database Error', message: err.message });
