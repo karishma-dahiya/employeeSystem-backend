@@ -88,7 +88,7 @@ app.post('/employees', function (req, res) {
 });
 app.put('/employees/:id', function (req, res) {
    let { name, department, designation, salary, gender } = req.body;
-     let id = req.params.id;
+     let id = +req.params.id;
     let values = [name, department, designation, salary, gender, id];
    
     let sql = 'UPDATE employees SET name=$1, department=$2, designation=$3, salary=$4, gender=$5  WHERE empcode=$6 ';
@@ -101,7 +101,7 @@ app.put('/employees/:id', function (req, res) {
     });
 });
 app.delete('/employees/:id', function (req, res) {
-    let {id} = req.params;
+     let id = +req.params.id;
     let sql = 'DELETE FROM employees WHERE empcode=$1 ';
     conn.query(sql,[id], function (err, results) {
         if (err) {
