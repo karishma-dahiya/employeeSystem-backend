@@ -53,7 +53,7 @@ app.listen(port, () => console.log(`Server is listening on port ${port}`));
 // });
 
 app.get('/employees', function (req, res) {
-    let sql = 'SELECT * from employees';
+    let sql = 'SELECT * from employees ORDER BY empcode ASC';
     conn.query(sql, function (err, results) {
         if (err) {
             res.status(500).json(`DataBase Error: `, err);
